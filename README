@@ -1,11 +1,11 @@
 # php5boilerplate #
 
 ## use ##
-1) copy config/config.local.json to config/config.json
-2) setup your virtual host `TODO example`
-3) write your url in browser and see it works
-4) implement your feature
-5) have fun
+  - copy config/config.local.json to config/config.json
+  - setup your virtual host `TODO example`
+  - write your url in browser and see it works
+  - implement your feature
+  - have fun
 
 ## credits ##
 - expressjs/sencha connect for the application,request,response,middleware concept
