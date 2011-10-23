@@ -76,7 +76,7 @@ class Request {
         return isset($this->params[$key])?$this->params[$key]:$defaultValue;
     }
 	
-	function getHost() {
+	public function getHost() {
 		$host = 'http';
 		if(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
 			$host .= "s";
