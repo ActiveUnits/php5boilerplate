@@ -8,7 +8,7 @@
 				height: 100%;
 				margin: 50px 0 0 0;
 				padding: 0;
-				font-family: Tahoma, Verdana;
+				font-family: "Helvetica Neue", Tahoma, Verdana;
 				font-size: 14px;
 				color: #000;
 			}
@@ -36,21 +36,9 @@
 	</head>
 	<body>
 		<div class="content">
-			<h1>404</h1>
-			<p>Sorry, but the page <strong>{url}</strong> you were trying to view does not exist.</p>
-			<p>It looks like this was the result of either:</p>
-			<p>
-				<ul>
-					<li>a mistyped address</li>
-					<li>an out-of-date link</li>
-				</ul>
-			</p>
+			<h1>{message}</h1>
+			<p>{location}</p>
+			<ul>{stackTrace}</ul>
 		</div>
-		<!-- offers google search
-		<script>
-			var GOOG_FIXURL_LANG = (navigator.language || '').slice(0,2), GOOG_FIXURL_SITE = location.host;
-		</script>
-		<script src="http://linkhelp.clients.google.com/tbproxy/lh/wm/fixurl.js"></script></div></article>
-		-->
 	</body>
 </html>

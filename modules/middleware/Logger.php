@@ -23,7 +23,7 @@ class Logger {
     static $instance;
     public $DEBUG = TRUE;
     public $ERROR_SEND = FALSE;
-    public $render500 = NULL;
+    public $errorHandler = NULL;
 
     public function __construct(){
         static::$instance = $this;
@@ -55,8 +55,8 @@ class Logger {
             if($this->ERROR_SEND == TRUE)
                 return;
             $this->ERROR_SEND = TRUE;
-            if($this->render500 != NULL) {
-                $handler = $this->render500;
+            if($this->errorHandler != NULL) {
+                $handler = $this->errorHandler;
                 $handler($e);
             } else {
                 header(($_SERVER['SERVER_PROTOCOL'] ?: 'HTTP/1.1').' Internal Server Error', true, 500);
