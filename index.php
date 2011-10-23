@@ -1,7 +1,7 @@
 <?php
-	require_once("modules/Request.php");
-	require_once("modules/Response.php");
-	require_once("modules/Application.php");
+	require_once("modules/expressphp/Request.php");
+	require_once("modules/expressphp/Response.php");
+	require_once("modules/expressphp/Application.php");
 
     // Glue the Application with Request and Response instances
 	$app = new Application(new Request(), new Response());
@@ -12,16 +12,16 @@
         // $request->benchmark variable will contain utility functions for taking 
         // benchmark stats per current request:
         // time taken, start time, memory, cpu & etc...
-        "modules/middleware/Benchmark.php",
+        "modules/expressphp/middleware/Benchmark.php",
 
         // catch all exceptions and errors, including parse errors too
-        "logger" => "modules/middleware/Logger.php",
+        "logger" => "modules/expressphp/middleware/Logger.php",
 
         // load the current /config/config.json into $request->config variable 
-        "config" => "modules/middleware/Config.php",
+        "config" => "modules/expressphp/middleware/Config.php",
 
         // router will handle the incoming $request and execute any routes been set.
-        "router" => "modules/middleware/Router.php"
+        "router" => "modules/expressphp/middleware/Router.php"
     ));
 
     // -------------------------------- setup modes -------------------------------
@@ -33,7 +33,7 @@
 
     // just for fun in test mode register additional route and middleware :)
     $app->mode('test', function() use ($app) {
-        $app->using("modules/middleware/BodyParser.php");
+        $app->using("modules/expressphp/middleware/BodyParser.php");
         $app->router->post("*",function($req, $res){
 			$res->send(view("views/post-sample.html"));
         });
