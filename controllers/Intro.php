@@ -1,5 +1,5 @@
 <?php
-require_once("modules/view.php");
+require_once("php_modules/view.php");
 
 class Intro {
     public function run($req, $res) {

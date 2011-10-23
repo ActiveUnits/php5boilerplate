@@ -87,5 +87,12 @@ class Request {
 		}
 		return $host;
 	}
+
+    public function header($name) {
+        if(strtolower($name) == "content-type")
+           return $_SERVER['CONTENT_TYPE'];
+        // TODO write all the others available... 
+        return $_SERVER["HTTP_".strtoupper($name)];
+    }
 }
 ?>

@@ -3,31 +3,31 @@ class Router {
 
     private $_rules;
 
-    public function addRule($method, $pattern, $path, $action = "run") {
-        $this->_rules[] = (object) array("pattern" => $pattern, "method" => $method, "path" => $path, "action" => $action);
+    public function addRule($method, $pattern, $handler, $action = "run") {
+        $this->_rules[] = (object) array("pattern" => $pattern, "method" => $method, "handler" => $handler, "action" => $action);
     }
 
-    public function all($pattern, $path, $action = "run") {
-        $this->get($pattern, $path, $action);
-        $this->post($pattern, $path, $action);
-        $this->delete($pattern, $path, $action);
-        $this->put($pattern, $path, $action);
+    public function all($pattern, $handler, $action = "run") {
+        $this->get($pattern, $handler, $action);
+        $this->post($pattern, $handler, $action);
+        $this->delete($pattern, $handler, $action);
+        $this->put($pattern, $handler, $action);
     }
 
-    public function get($pattern, $path, $action = "run") {
-        $this->addRule("GET", $pattern, $path, $action);
+    public function get($pattern, $handler, $action = "run") {
+        $this->addRule("GET", $pattern, $handler, $action);
     }
 
-    public function post($pattern, $path, $action = "run") {
-        $this->addRule("POST", $pattern, $path, $action);
+    public function post($pattern, $handler, $action = "run") {
+        $this->addRule("POST", $pattern, $handler, $action);
     }
 
-    public function delete($pattern, $path, $action = "run") {
-        $this->addRule("DELETE", $pattern, $path, $action);
+    public function delete($pattern, $handler, $action = "run") {
+        $this->addRule("DELETE", $pattern, $handler, $action);
     }
 
-    public function put($pattern, $path, $action = "run") {
-        $this->addRule("PUT", $pattern, $path, $action);
+    public function put($pattern, $handler, $action = "run") {
+        $this->addRule("PUT", $pattern, $handler, $action);
     }
 
     public function run($request, $response) {
@@ -36,15 +36,14 @@ class Router {
             $rule = $this->_rules[$i];
             
             if($rule->method == $request->method && $this->match($rule->pattern, $request->url, $request->params)) {
-                
-                    if(is_callable($rule->path)) {
-                        $handler = $rule->path;
+                    $handler = $rule->handler;
+                    if(is_callable($handler)) {
                         $handler($request, $response);
-                    } else if(is_string($rule->path)) {
+                    } else if(is_string($handler)) {
 
-                        require_once($rule->path);
+                        require_once($handler);
 
-                        $parts = explode("/",$rule->path);
+                        $parts = explode("/",$handler);
                         $last =  array_pop($parts);
                         $className = str_replace(".php", "", $last);
                         $instance = new $className($this);
@@ -53,7 +52,7 @@ class Router {
                         $instance->$action($request, $response);
 
                     } else
-                        throw new ErrorException("not usable ".$rule->path.' for route handler');
+                        throw new ErrorException("not usable ".$handler.' for route handler');
             }
         }
     }

@@ -14,15 +14,14 @@ function shutdown()
 { 
     $e=error_get_last(); 
     if($e != null) {
-        Logger::$instance->error(new ErrorException($e['message'], 0, $e['type'], $e['file'], $e['line']) );
+        Debugger::$instance->error(new ErrorException($e['message'], 0, $e['type'], $e['file'], $e['line']) );
 	}
 } 
 
-class Logger {
+class Debugger {
 
     static $instance;
     public $DEBUG = TRUE;
-    public $ERROR_SEND = FALSE;
     public $errorHandler = NULL;
 
     public function __construct(){
@@ -39,10 +38,6 @@ class Logger {
         error_reporting(E_ALL);
     }
 
-    public function run($req, $res) {
-		
-    }
-
     public function error(Exception $e) {
         // always output to log first
         $output = 'Message:'.$e->getMessage().'\n\r'.
@@ -52,9 +47,6 @@ class Logger {
 
         // show as raw response using Response.php style
         if($this->DEBUG == TRUE) {
-            if($this->ERROR_SEND == TRUE)
-                return;
-            $this->ERROR_SEND = TRUE;
             if($this->errorHandler != NULL) {
                 $handler = $this->errorHandler;
                 $handler($e);
@@ -108,4 +100,6 @@ class Logger {
         }
     }
 }
+
+$debugger = new Debugger();
 ?>
