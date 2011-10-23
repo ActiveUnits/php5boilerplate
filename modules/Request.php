@@ -16,6 +16,7 @@ class Request {
         if (empty($config)) {
             $config = array(
                 'url' => $_SERVER['REQUEST_URI'],
+                'host' => $this->getHost(),
                 'base' => str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])),
                 'method' => $_SERVER['REQUEST_METHOD'],
                 'referrer' => isset($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:"",
@@ -74,5 +75,17 @@ class Request {
     public function param($key, $defaultValue = NULL) {
         return isset($this->params[$key])?$this->params[$key]:$defaultValue;
     }
+	
+	function getHost() {
+		$host = 'http';
+		if(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
+			$host .= "s";
+		}
+		$host .= "://".$_SERVER['HTTP_HOST'];
+		if(substr($host, strlen($host) - 1, 1) != "/") {
+			$host .= "/";
+		}
+		return $host;
+	}
 }
 ?>

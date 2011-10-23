@@ -105,7 +105,7 @@ class Response {
      * if $status is NULL, then $response->status will be used instead, defaults to 200.
      * All headers are send using this method if they have not been send already.
      */
-    public function send($body = NULL,$status = NULL) {
+    public function send($body = NULL, $status = NULL) {
 
         if (!headers_sent()) {
             if($status != NULL)
