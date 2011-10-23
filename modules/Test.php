@@ -27,6 +27,13 @@
 						$arg->run();
 					}
 				break;
+				case "string":
+					require($arg);
+					$parts = explode("/", $arg);
+		            $className = str_replace(".php", "", array_pop($parts));
+		            $instance = new $className();
+		            $isntance->run();
+				break;
 				default:
 					$arg->run();
 				break;

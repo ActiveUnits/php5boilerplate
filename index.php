@@ -35,7 +35,7 @@
     $app->mode('test', function() use ($app) {
         $app->using("modules/expressphp/middleware/BodyParser.php");
         $app->router->post("*",function($req, $res){
-			$res->send(view("views/post-sample.html"));
+			$res->send(view("views/post-sample.html", $req->body));
         });
     });
 
