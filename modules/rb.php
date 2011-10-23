@@ -773,7 +773,7 @@ abstract class RedBean_QueryWriter_AQueryWriter {
 			try{
 				$this->adapter->exec("ALTER TABLE  $table
 				ADD FOREIGN KEY (  $column ) REFERENCES  $targetTable (
-				$targetColumn) ON DELETE NO ACTION ON UPDATE NO ACTION ;");
+				$targetColumn) ON DELETE SET NULL ON UPDATE SET NULL ;");
 			}
 			catch(Exception $e) {
 			}
@@ -1131,7 +1131,7 @@ class RedBean_QueryWriter_SQLiteT extends RedBean_QueryWriter_AQueryWriter imple
 					$fkDef .= ', FOREIGN KEY(`'.$field.'`) REFERENCES `'.$targetTable.'`(`'.$targetField.'`) ON DELETE CASCADE ';
 				}
 				else {
-					$fkDef .= ', FOREIGN KEY(`'.$field.'`) REFERENCES `'.$targetTable.'`(`'.$targetField.'`) ';
+					$fkDef .= ', FOREIGN KEY(`'.$field.'`) REFERENCES `'.$targetTable.'`(`'.$targetField.'`) ON DELETE SET NULL ON UPDATE SET NULL';
 				}
 				$q = array();
 				$q[] = "DROP TABLE IF EXISTS tmp_backup;";
@@ -1340,7 +1340,7 @@ where table_schema = 'public'" );
 				try{
 					$this->adapter->exec("ALTER TABLE  $table
 					ADD FOREIGN KEY (  $column ) REFERENCES  $targetTable (
-					$targetColumn) ON DELETE NO ACTION ON UPDATE NO ACTION ;");
+					$targetColumn) ON DELETE SET NULL ON UPDATE SET NULL ;");
 					return true;
 				}
 				catch(Exception $e) {
