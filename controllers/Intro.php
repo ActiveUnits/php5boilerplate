@@ -7,7 +7,7 @@ class Intro {
             view("views/layout-default.html", array(
                 "content" => view("views/intro.html"),
                 "time" => $req->benchmark->elpasedTime(),
-				"siteURL" => $req->base
+				"host" => $req->host
             ))
         );
     }

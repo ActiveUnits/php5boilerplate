@@ -14,9 +14,7 @@ class SampleController {
         $response = 
         view("views/layout-default.html", array(
             "content" => view("views/sample.html", array(
-
                 "content" => $req->param("key1", "defaultKey1Value"),
-
                 "footer" => view("views/sample-footer.html", array(
                     "content" => $req->param("key2", "defaultKey2Value")
                 ))

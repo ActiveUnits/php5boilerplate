@@ -45,19 +45,20 @@
     $app->router->get("/error", "controllers/SampleController.php", 'simulateError');
 	$app->router->get("", "controllers/Intro.php");
 
-    // -------------------------------- setup custom 500 page ---------------------
-    require_once ("modules/view.php");
-    $app->logger->render500 = function(Exception $e) use ($app) {
-        $app->response->send(view(dirname(__FILE__)."/views/500.html", array(
+    // -------------------------------- setup custom error page ---------------------
+    $app->logger->errorHandler = function(Exception $e) use ($app) {
+		require_once("modules/view.php");
+        $app->response->send(view(dirname(__FILE__)."/views/error.html", array(
             "message" => $e->getMessage(),
             "location" => "File: ".$e->getFile()." Line: ".$e->getLine(),
-            "stackTrace" => '<li>'.implode(explode("\n",$e->getTraceAsString()), '<li>')
+            "stackTrace" => '<li>'.implode(explode("\n", $e->getTraceAsString()), '<li>')
         )), 500);
     };
 
     // -------------------------------- setup custom 404 page ---------------------
-    $app->router->all("*", function($req, $res){
-        $res->send(view("views/404.html", array("url"=>$app->request->url)), 404);  
+    $app->router->all("*", function($req, $res) use ($app) {
+		require_once("modules/view.php");
+        $res->send(view("views/404.html", array("url" => $app->request->url)), 404);  
     });
 	
     // finally run the application in the defined mode (/config/config.json)

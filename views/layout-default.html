@@ -1,9 +1,44 @@
-<html>
-    <body>
-        {content}
-        <br />
-        <div>
-            Time(miliseconds): {time}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<title>Boilerplate</title>
+		<style type="text/css">
+			body { 
+				width: 100%;
+				height: 100%;
+				margin: 50px 0 0 0;
+				padding: 0;
+				font-family: Tahoma, Verdana;
+				font-size: 14px;
+				color: #000;
+			}
+			.content {
+				display: block;
+				width: 950px;
+				margin: 0 auto;
+				border: solid 1px #999;
+				padding: 20px;
+			}
+			h1 {
+				font-size: 40px;
+				font-weight: normal;
+				margin: 0 0 20px 0;
+				padding: 0 0 20px 0;
+				color: #808080;
+				border-bottom: solid 1px #999;
+				text-align: center;
+			}
+			p {
+				margin: 10px;
+				padding: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="content">
+			<h1>PHP Boilerplate</h1>
+			{content}
+			<p>Time(miliseconds): {time}</p>
         </div>
     </body>
 </html>
