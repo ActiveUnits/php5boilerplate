@@ -13,31 +13,33 @@
 		}
 	}
 	
-	Test::run(new OpenXTesting());
+	die(Test::run(new OpenXTesting()));
 	
 	*/
 
 	// run multiple tests
 	class Test {
-		public function run($arg) {
-			switch(gettype($arg)) {
-				case "array":
-					$numOfTests = count($arg);
-					for($i=0; $i<$numOfTests; $i++) {
-						$arg->run();
-					}
-				break;
-				default:
-					$arg->run();
-				break;
-			};
+		public static function run($arg) {
+            $result = "";
+			if(is_array($arg)) {
+                $numOfTests = count($arg);
+                for($i=0; $i<$numOfTests; $i++) {
+                    $result .= $arg->run();
+                }
+            } else {
+                $result = $arg->run();
+            }
+            return $result;
 		}
 	};
 	
 	// responsible for displaying the results
 	class TestResult {
-		public function TestResult() {
-			echo '
+    
+        private $result = "";
+        
+		public function __construct() {
+			$this->result .= '
 				<style type="text/css">
 					body {
 						font-family: Tahoma;
@@ -47,22 +49,22 @@
 			';
 		}
 		public function title($str) {
-			echo '<h1 style="font-size:20px;">'.$str.'</h1>';
+			$this->result .= '<h1 style="font-size:20px;">'.$str.'</h1>';
 		}
 		public function passed($str) {
-			echo '<p style="color: #256D1B; margin: 0; padding: 0;">Passed &#187; '.$str.'</p>';
+			$this->result .= '<p style="color: #256D1B; margin: 0; padding: 0;">Passed &#187; '.$str.'</p>';
 		}
 		public function failed($str) {
-			echo '<p style="color: #FF0000; font-weight: bold; margin: 0; padding: 0;">Failed &#187; '.$str.'</p>';
+			$this->result .= '<p style="color: #FF0000; font-weight: bold; margin: 0; padding: 0;">Failed &#187; '.$str.'</p>';
 		}
 		public function sectionStart($title) {
-			echo '<fieldset><legend>'.$title.'</legend>';
+			$this->result .= '<fieldset><legend>'.$title.'</legend>';
 		}
 		public function sectionEnd() {
-			echo '</fieldset>';
+			$this->result .= '</fieldset>';
 		}
 		public function note($str) {
-			echo '
+			$this->result .= '
 				<p 
 					style="
 						border-left: solid 10px #42A5CA;
@@ -75,6 +77,9 @@
 					"
 				>'.$str.'</p>';
 		}
+        public function __toString() {		
+            return $this->result;
+        }
 	};
 	
 	// custom exception which help us to investigate the result of the test
@@ -82,7 +87,7 @@
 	
 		public $status;
 	
-		function TestException($status) {
+		function __construct($status) {
 			$this->status = $status;
 		}
 	};
@@ -92,6 +97,7 @@
 	
 		protected $_result;
 		private $_skipMethods = array(
+            "__construct",
 			"run", 
 			"TestCase", 
 			"getTraceInformation", 
@@ -112,8 +118,8 @@
 			"isLessThen",
 			"describe"
 		);
-	
-		public function TestCase() {
+        
+		public function __construct() {
 			$this->_result = new TestResult();
 		}
 		public function run() {
@@ -130,6 +136,8 @@
 					$this->_result->sectionEnd();
 				}
 			}
+            
+            return $this->_result;
 			
 		}
 		public function describe($str) {
