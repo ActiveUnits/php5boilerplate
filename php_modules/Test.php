@@ -19,6 +19,9 @@
 
 	// run multiple tests
 	class Test {
+
+					
+
 		public static function run($arg) {
             $result = "";
 			if(is_array($arg)) {
@@ -26,10 +29,17 @@
                 for($i=0; $i<$numOfTests; $i++) {
                     $result .= $arg->run();
                 }
+            } if(is_string($arg)){
+            	require_once($arg);
+				$parts = explode("/", $arg);
+	            $className = str_replace(".php", "", array_pop($parts));
+	            $instance = new $className();
+	            $isntance->run();
             } else {
                 $result = $arg->run();
             }
             return $result;
+
 		}
 	};
 	
