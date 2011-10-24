@@ -28,8 +28,8 @@
 
     // -------------------------------- setup modes -------------------------------
     // in production do not show debug to agents, just log everything including stack traces.
-    $app->mode('production', function() use ($app) {
-        $app->logger->DEBUG = FALSE;
+    $app->mode('production', function() use ($debugger) {
+        $debugger->DEBUG = FALSE;
     });
     $app->mode('staging', function() use ($app) {
     });
