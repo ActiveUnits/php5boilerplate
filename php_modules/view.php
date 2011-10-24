@@ -15,10 +15,6 @@
 class View {
 
 	/**
-	*	template file path		
-	*/
-	public $tplFile = NULL;
-	/**
 	*	template file contents ({placeholders} are not replaced with values)
 	*/
 	public $tplFileContent = NULL;
