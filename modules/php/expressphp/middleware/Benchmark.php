@@ -3,7 +3,7 @@ class Benchmark {
 
     public $startTime;
 
-    public function __construct(){
+    public function __construct($app){
         $this->startTime = microtime();
     }
 

@@ -3,6 +3,10 @@ class Router {
 
     private $_rules;
 
+    public function __construct($app){
+        
+    }
+
     public function addRule($method, $pattern, $handler, $action = "run") {
         $this->_rules[] = (object) array("pattern" => $pattern, "method" => $method, "handler" => $handler, "action" => $action);
     }
