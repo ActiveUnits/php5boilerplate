@@ -1,6 +1,6 @@
 <?php
 class BodyParser {
-    public function __construct(){
+    public function __construct($app){
     }
     public function run($req, $res) {
         if($req->method != "POST" && $req->method != "PUT")

@@ -21,18 +21,8 @@
 
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons -->
 
-  <!-- CSS: implied media=all -->
-  <!-- CSS concatenated and minified via ant build script-->
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/layout-default.css">
-  <!-- end CSS-->
-
-  <!-- More ideas for your <head> here: h5bp.com/d/head-Tips -->
-
-  <!-- All JavaScript at the bottom, except for Modernizr / Respond.
-       Modernizr enables HTML5 elements & feature detects; Respond is a polyfill for min/max-width CSS3 Media Queries
-       For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ -->
-  <script src="/js_modules/modernizr-2.0.6.min.js"></script>
+  {stylesheet}
+  {javascript}
 </head>
 
 <body>
@@ -42,15 +32,6 @@
     {content}
     <p>Time(miliseconds): {time}</p>
   </div>
-
-
-  <!-- JavaScript at the bottom for fast page loading -->
-
-  <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="/js_modules/jquery/jquery-1.6.2.min.js"><\/script>')</script>
-
-  <script defer src="/js_modules/fix.console.log.js"></script>
 
 	
   <!-- Change UA-XXXXX-X to be your site's ID -->
