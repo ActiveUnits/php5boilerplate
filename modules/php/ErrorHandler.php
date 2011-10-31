@@ -14,15 +14,15 @@ function shutdown()
 { 
     $e=error_get_last(); 
     if($e != null) {
-        Debugger::$instance->error(new ErrorException($e['message'], 0, $e['type'], $e['file'], $e['line']) );
+        ErrorHandler::$instance->error(new ErrorException($e['message'], 0, $e['type'], $e['file'], $e['line']) );
 	}
 } 
 
-class Debugger {
+class ErrorHandler {
 
     static $instance;
     public $DEBUG = TRUE;
-    public $errorHandler = NULL;
+    public $onError = NULL;
 
     public function __construct(){
         static::$instance = $this;
@@ -47,8 +47,8 @@ class Debugger {
 
         // show as raw response using Response.php style
         if($this->DEBUG == TRUE) {
-            if($this->errorHandler != NULL) {
-                $handler = $this->errorHandler;
+            if($this->onError != NULL) {
+                $handler = $this->onError;
                 $handler($e);
             } else {
                 header(($_SERVER['SERVER_PROTOCOL'] ?: 'HTTP/1.1').' Internal Server Error', true, 500);
@@ -100,6 +100,4 @@ class Debugger {
         }
     }
 }
-
-$debugger = new Debugger();
 ?>

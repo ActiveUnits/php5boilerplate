@@ -1,0 +1,5 @@
+config/config.json
+assets/compiled/*.css
+assets/compiled/*.js
+assets/compiled/js.hash
+assets/compiled/css.hash

@@ -1,14 +1,19 @@
 <?php
+require("include_path.php");
+add_include_path(dirname(__FILE__)."/modules/");
+
 class Application {
+    public $root = NULL;
     public $request = NULL;
     public $response = NULL;
     
     private $modules = array();
     private $modes = array();
 
-    public function __construct($request, $response){
+    public function __construct($root, $request, $response){
         $this->request = $request;
         $this->response = $response;
+        $this->root = $root;
     }
 
     public function mode($name, $handler) {
@@ -26,7 +31,7 @@ class Application {
             require_once($path);
             $parts = explode("/", $path);
             $className = str_replace(".php", "", array_pop($parts));
-            $instance = new $className();
+            $instance = new $className($this);
             $this->modules []= array("instance" => $instance);
             if(is_string($name)) {
                 $this->$name = $instance;

@@ -1,18 +1,22 @@
 <?php
-require_once("php_modules/view.php");
+require_once("view.php");
 
 class SampleController {
 	
 	public function run($req, $res) {
 		$res->send(view("views/layout-default.html", array(
+            "javascript" => $res->javascript->get(),
+            "stylesheet" => $res->stylesheet->get(),
             "content" => "testValue1",
-            "time" => $req->benchmark->elpasedTime()
+            "time" => $req->benchmark->elpasedTime(),
+            "javascript" => $res->javascript()
         )));
 	}
 
     public function run2($req, $res) {
-        $response = 
-        view("views/layout-default.html", array(
+        $response = view("views/layout-default.html", array(
+            "javascript" => $res->javascript->get(),
+            "stylesheet" => $res->stylesheet->get(),
             "content" => view("views/sample.html", array(
                 "content" => $req->param("key1", "defaultKey1Value"),
                 "footer" => view("views/sample-footer.html", array(

@@ -1,76 +1,74 @@
 <?php
-    set_include_path(dirname(__FILE__)."/php_modules/");
-    require_once("debugger.php");
+    set_include_path(dirname(__FILE__)."/modules/php/");
 
-    // -------------------------------- require expressphp --------------------------
-	require_once("expressphp/Request.php");
-	require_once("expressphp/Response.php");
-	require_once("expressphp/Application.php");
+    // always register errors handler first
+    require_once("ErrorHandler.php");
+    $errorHandler = new ErrorHandler();
 
-    // Glue the Application with Request and Response instances
-	$app = new Application(new Request(), new Response());
+    // setup custom error page using view module
+    $errorHandler->onError = function(Exception $e) {
+        require_once("view.php");
+        header("Status: 500 Internal Server Error");
+        exit(view(dirname(__FILE__)."/views/error.html", array(
+            "message" => $e->getMessage(),
+            "location" => "File: ".$e->getFile()." Line: ".$e->getLine(),
+            "stackTrace" => '<li>'.implode(explode("\n", $e->getTraceAsString()), '<li>')
+        )));
+    };
 
-    // -------------------------------- setup middleware order --------------------
+    // -------------- require expressphp $app instance ----------------------------
+    require_once("expressphp/Response.php");
+    require_once("expressphp/Request.php");
+    require_once("expressphp/Application.php");
+
+    $app = new Application(dirname(__FILE__), new Request(), new Response());
+
+    // setup middleware
     $app->using(array(
-        // $request->benchmark variable will contain utility functions for taking 
-        // benchmark stats per current request:
-        // time taken, start time, memory, cpu & etc...
+        // $request->benchmark variable will contain utility functions for benchmarking
         "expressphp/middleware/Benchmark.php",
-
-        // load the current /config/config.json into $request->config variable 
-        "config" => "expressphp/middleware/Config.php",
-
+        // $request->config variable will contain current config
+        "config" => "expressphp/middleware/JSONConfig.php",
+        // $response->javascript variable will contain javascript assets support
+        "javascript" => "expressphp/middleware/Javascript.php",
+        // $response->css variable will contain css assets support
+        "css" => "expressphp/middleware/CSS.php",
+        // $request->body will be parsed to object if incoming request is POST or PUT
         "expressphp/middleware/BodyParser.php",
-
         // router will handle the incoming $request and execute any routes been set.
         "router" => "expressphp/middleware/Router.php"
     ));
 
-    // -------------------------------- setup modes -------------------------------
-    // in production do not show debug to agents, just log everything including stack traces.
-    $app->mode('production', function() use ($debugger) {
-        $debugger->DEBUG = FALSE;
-    });
-    $app->mode('staging', function() use ($app) {
-    });
-    $app->mode('local', function() use ($app) {
-    });
-    $app->mode('test', function() use ($app) {
-    });
+    // set configuration source file 
+    $app->config->source(array(
+        "public"=>"/config/config.json"
+    ));
 
-	// -------------------------------- setup router ------------------------------
-    $app->router->get("/something/index.html", "controllers/SampleController.php");
-    $app->router->get("/@key1/@key2", "controllers/SampleController.php", 'run2');
-    $app->router->get("/error", "controllers/SampleController.php", 'simulateError');
-	$app->router->get("", "controllers/Intro.php");
+    // set javascript source paths
+    $app->javascript->source(array(
+        "/modules/js/*.js",
+        "/models/js/*.js",
+        "/controllers/js/*.js"
+    ));
+    $app->javascript->destination("/assets/compiled/");
 
-    // example test requests
-    // curl -d  'user[name]=tj' 
-    // curl -d '{"user":{"name":"tj"}}' -H "Content-Type: application/json"
-    $app->router->post("*", function($req, $res){
-        require_once("view.php");
-        $res->send(view(dirname(__FILE__)."/views/layout-default.html", array(
-            "content" => $req->body->user->name,
-            "time" => $req->benchmark->elpasedTime()
-        )));
-    }); 
+    // set css source paths
+    $app->css->source(array(
+        "/assets/css/*.css"
+    ));
+    $app->css->destination("/assets/compiled/");
 
-    // -------------------------------- setup custom 404 page ---------------------
-    $app->router->all("*", function($req, $res) {
-		require_once("view.php");
-        $res->send(view("views/404.html", array("url" => $req->url)), 404);  
-    });
+	// setup routes
+    require_once("controllers/php/Routes.php");
+    $routes = new Routes($app->router);
 
-    // -------------------------------- setup custom error page ---------------------
-    $debugger->errorHandler = function(Exception $e) use ($app) {
-        require_once("view.php");
-        $app->response->send(view(dirname(__FILE__)."/views/error.html", array(
-            "message" => $e->getMessage(),
-            "location" => "File: ".$e->getFile()." Line: ".$e->getLine(),
-            "stackTrace" => '<li>'.implode(explode("\n", $e->getTraceAsString()), '<li>')
-        )), 500);
-    };
+    // only in production disable debugging.
+    if($app->config->get("public.mode") == "production") {
+        $errorHandler->DEBUG = FALSE;
+        $app->javascript->DEBUG = FALSE;
+        $app->stylesheet->DEBUG = FALSE;
+    }
 	
     // finally run the application in the defined mode (/config/config.json)
-	$app->run($app->config->get("mode"));
+	$app->run($app->config->get("public.mode"));
 ?>

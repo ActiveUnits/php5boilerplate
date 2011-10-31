@@ -1,0 +1,2 @@
+var global = {};
+global.modules = {};
