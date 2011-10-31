@@ -12,8 +12,8 @@ class Javascript {
     private $hash = "";
     private $root = "";
 
-    public function __construct($app){
-        $this->root = $app->root;
+    public function __construct($options){
+        $this->root = $options->root;
     }
 
     public function run($req, $res) {

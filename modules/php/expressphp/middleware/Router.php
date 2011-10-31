@@ -1,9 +1,10 @@
 <?php
-class Router {
+require_once("expressphp/Middleware.php");
+class Router extends Middleware {
 
     private $_rules;
 
-    public function __construct($app){
+    public function __construct($options){
         
     }
 
@@ -35,6 +36,8 @@ class Router {
     }
 
     public function run($request, $response) {
+        parent::run($request, $response);
+        
         $numOfRules = count($this->_rules);
         for($i=0; $i<$numOfRules; $i++) {
             $rule = $this->_rules[$i];

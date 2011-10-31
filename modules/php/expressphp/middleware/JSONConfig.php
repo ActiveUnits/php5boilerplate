@@ -3,9 +3,9 @@ class JSONConfig {
     private $data;
     private $root;
     
-    public function __construct($app){
+    public function __construct($options){
         $this->data = new stdClass();
-        $this->root = $app->root;
+        $this->root = $options->root;
     }
 
     public function source($source) {

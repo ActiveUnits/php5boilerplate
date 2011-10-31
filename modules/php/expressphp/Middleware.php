@@ -2,23 +2,13 @@
 require("include_path.php");
 add_include_path(dirname(__FILE__)."/modules/");
 
-class Application {
-    public $root = NULL;
-    public $request = NULL;
-    public $response = NULL;
+class Middleware {
     
     private $modules = array();
-    private $modes = array();
 
-    public function __construct($root, $request, $response){
-        $this->request = $request;
-        $this->response = $response;
-        $this->root = $root;
-    }
-
-    public function mode($name, $handler) {
-        $this->modes[$name] = $handler;
-        return $this;
+    public function __construct($options){
+        foreach($options as $key => $value)
+            $this->{$key} = $value;
     }
 
     public function using($modules) {
@@ -41,16 +31,12 @@ class Application {
         return $this;
     }
 
-    public function run($modeName) {
-	
-        if(isset($this->modes[$modeName])) {
-            $modehandler = $this->modes[$modeName];
-            $modehandler($this->request, $this->response);
-        }
+    public function run($request, $response) {
 
         // then, execute all middleware modules in FIFO sequence
         foreach($this->modules as $module) {
-            $module["instance"]->run($this->request, $this->response);
+
+                $module["instance"]->run($request, $response);
         }
 		
     }
