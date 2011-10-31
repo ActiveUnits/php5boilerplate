@@ -26,5 +26,7 @@ class Routes {
             $res->send(view("views/404.html", array("url" => $req->url)), 404);  
         });
     }
+
+    public function run($req, $res) {}
 }
 ?>
