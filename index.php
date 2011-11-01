@@ -19,9 +19,11 @@
     // -------------- require expressphp $app instance ----------------------------
     require_once("expressphp/Response.php");
     require_once("expressphp/Request.php");
-    require_once("expressphp/Application.php");
+    require_once("expressphp/Middleware.php");
 
-    $app = new Application(dirname(__FILE__), new Request(), new Response());
+    $app = new Middleware(array(
+        "root" => dirname(__FILE__)
+    ));
 
     // setup middleware
     $app->using(array(
@@ -35,9 +37,10 @@
         "css" => "expressphp/middleware/CSS.php",
         // $request->body will be parsed to object if incoming request is POST or PUT
         "expressphp/middleware/BodyParser.php",
-        // router will handle the incoming $request and execute any routes been set.
+        // router will handle the incoming $request and execute any routes been set via the Routes controller
         "router" => "expressphp/middleware/Router.php"
     ));
+    $app->router->using(array("controllers/php/Routes.php"));
 
     // set configuration source file 
     $app->config->source(array(
@@ -58,10 +61,6 @@
     ));
     $app->css->destination("/assets/compiled/");
 
-	// setup routes
-    require_once("controllers/php/Routes.php");
-    $routes = new Routes($app->router);
-
     // only in production disable debugging.
     if($app->config->get("public.mode") == "production") {
         $errorHandler->DEBUG = FALSE;
@@ -70,5 +69,5 @@
     }
 	
     // finally run the application in the defined mode (/config/config.json)
-	$app->run($app->config->get("public.mode"));
+	$app->run(new Request(), new Response());
 ?>
