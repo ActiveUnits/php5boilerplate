@@ -12,6 +12,32 @@
 *	usage2:
 *	echo view("/path/to/template",array("key" => "value"))
 */
+class ViewDebug {
+    private static $enable = false;
+    public static function debug($mode = null) {
+        if($mode != null) {
+            self::$enable = $mode;
+        } else {
+            return self::$enable;
+        }
+    }
+}
+class ViewCache {
+    private static $cache;
+    public static function add($file, $content) {
+        if(self::$cache == NULL) {
+            self::$cache = (object) array();
+        }
+        self::$cache->$file = $content;
+    }
+    public static function get($file) {
+        if(isset(self::$cache->$file)) {
+            return self::$cache->$file;
+        } else {
+            return false;
+        }
+    }
+}
 class View {
 
 	/**
@@ -24,11 +50,23 @@ class View {
 	public $vars = array();
 
 	public function __construct($path, array $data){
-		$fh = @fopen($path, "r");
-		if(!$fh)
-			throw new ErrorException("Missing file '".$path."'.");
-		$this->tplFileContent = fread($fh, filesize($path));
-		fclose($fh);
+        
+        $cache = ViewCache::get($path);
+        
+        if(!$cache) {
+            if(ViewDebug::debug()) {
+                var_dump($path);
+            }
+            $fh = @fopen($path, "r");
+            if(!$fh) {
+                throw new ErrorException("Missing file '".$path."'.");
+            }
+            $this->tplFileContent = fread($fh, filesize($path));
+            fclose($fh);
+            ViewCache::add($path, $this->tplFileContent);
+        } else {
+            $this->tplFileContent = $cache;
+        }
 
 		$this->vars = $data;
 	}
